@@ -1,0 +1,15 @@
+{
+  "name": "comp229-f2022-week2-lab",
+  "version": "1.0.0",
+  "description": "COMP229 Assignment 2",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sheila Donnelly",
+  "license": "ISC",
+  "dependencies": {
+    "connect": "^3.7.0",
+    "install": "^0.13.0"
+  }
+}
