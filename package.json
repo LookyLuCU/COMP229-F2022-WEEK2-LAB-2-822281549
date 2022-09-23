@@ -1,8 +1,9 @@
 {
-  "name": "comp229-f2022-week2-lab",
+  "name": "comp229-f2022-week2-lab-822281549",
   "version": "1.0.0",
   "description": "COMP229 Assignment 2",
   "main": "server.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
