@@ -1,75 +1,58 @@
-//import express
-import express from "express";
-import cookieParser from "cookie-parser";
-import logger from 'morgan';
-import session from "express-session";
+import debug from 'debug';
+debug('comp-229');
+import http from 'http';
 
-//ES Modules fix for _dirname
-import path, {dirname} from 'path';
-import { fileURLToPath } from 'url';
-const _dirname = dirname(fileURLToPath(import.meta.url));
+import app from './app/app.js';
 
-//import router
-import indexRouter from './app/routes/index.server.route.js';
+const PORT = normalizePort(process.env.PORT || 3000);
+app.set('port', PORT);
 
-//instantiate app server
-const app = express();
+const server = http.createServer(app);
 
-//Setup ViewEngine EJS
-app.set('views', path.join(_dirname, '/views'));
+server.listen(PORT);
+server.on('error', onError);
+server.on('listening', onListening);
 
-//infomr express which engine we will use
-app.set('view engine', 'ejs');
+function normalizePort(val) {
+    var port = parseInt(val, 10);
+    if (isNaN(port)) {
+        return val;
+    }
 
-//loading 3rd party library
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({extended: false}));
-app.use(cookieParser());
-app.use(express.static(path.join(_dirname, '../public'))); //static files = imgs, js in browser, any uploaded files req uploading to browser
-app.use(session({
-    secret: 'MySecret',    //best prctice to use secrt
-    saveUninitialized: false,       //lose session when reloaded
-    resave: false
-}));
+    if (port >= 0) {
+        return port;
+    }
 
-
-//not needed anymore
-/*const connect = require('connect');
-
-//instantiate app server
-const app = connect();*/
-
-
-//now in index.controller
-/*
-//customer middleware (function)
-function message(req, res, next){
-    res.setHeader('Content-Type', 'text/plain');
-    res.end('Hello from NodeJS Application')
-}*/
-
-//customer middleware (function)
-function messageAsHTML(req, res, next){
-    res.setHeader('Content-Type', 'text/html');
-    res.end('<h1>Hello from NodeJS Application as html</h1>')
+    return false;
 }
 
-//customer middleware (function)
-function messageAsJSON(req, res, next){
-    res.setHeader('Content-Type', 'application:json');
-    res.end('{"message": "Hello from NodeJS Application as json"}')
+function onError(error) {
+    if (error.syscall !== 'listen') {
+        throw error;
+    }
+
+    let bind = typeof port === 'string'
+        ? 'Pipe ' + port
+        : 'Port ' + port;
+
+    // handle specific listen errors with friendly messages
+    switch (error.code) {
+        case 'EACCES':
+            console.error(bind + ' requires elevated privileges');
+            process.exit(1);
+            break;
+        case 'EADDRINUSE':
+            console.error(bind + ' is already in use');
+            process.exit(1);
+            break;
+        default:
+            throw error;
+    }
 }
 
-//app.use('/', helloWorld);
-app.use('//', message)
-app.use('/html', messageAsHTML);
-app.use('/json', messageAsJSON);
-
-//use modules
-app.use('/', indexRouter);
-
-//run app
-app.listen(3000);
-
-console.log('Server running at http://localhost:3000');
+function onListening() 
+{
+  let addr = server.address();
+  let bind = 'pipe ' + addr;
+  debug('Listening on ' + bind);
+}
